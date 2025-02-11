@@ -1,17 +1,18 @@
+require("dotenv").config(); // Load environment variables
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const jwtSecret = "jrjojgotjhloorjojOoOLOloNOoo#";
+const jwtSecret = process.env.JWT_SECRET;  // Use .env variable
 
 const User = require("../models/Users");
 const Order = require("../models/Orders");
 
 router.use(express.json());
 
-//POST
+//POST - Create User
 router.post(
   "/createuser",
   [
@@ -50,7 +51,7 @@ router.post(
   }
 );
 
-//POST
+//POST - Login User
 router.post(
   "/loginuser",
   [
@@ -58,7 +59,6 @@ router.post(
     body("password", "Incorrect password").isLength({ min: 5 }),
   ],
   async (req, res) => {
-
     const result = validationResult(req);
     if (!result.isEmpty()) {
       return res.status(400).json({ errors: result.array() });
@@ -69,52 +69,35 @@ router.post(
       const userData = await User.findOne({ email });
 
       if (!userData) {
-        return res
-          .status(400)
-          .json({ errors: "Try logging in with correct email" });
+        return res.status(400).json({ errors: "Try logging in with correct email" });
       }
 
-      const passwordCompare = await bcrypt.compare(
-        req.body.password,
-        userData.password
-      );
+      const passwordCompare = await bcrypt.compare(req.body.password, userData.password);
 
       if (!passwordCompare) {
-        return res
-          .status(400)
-          .json({ errors: "Try logging in with correct password" });
+        return res.status(400).json({ errors: "Try logging in with correct password" });
       }
-      const data = {
-        user: {
-          id: userData.id,
-        },
-      };
 
-      const authToken = jwt.sign(data, jwtSecret);
+      const data = { user: { id: userData.id } };
+      const authToken = jwt.sign(data, jwtSecret);  // Use .env JWT Secret
 
-      return res.json({ success: true, authToken: authToken });
+      return res.json({ success: true, authToken });
     } catch (err) {
-      res.status(500).json({
-        message: err.message,
-        success: false,
-      });
+      res.status(500).json({ message: err.message, success: false });
     }
   }
 );
 
-//POST
+//POST - Food Data
 router.post("/foodData", (req, res) => {
   try {
     res.send([global.FoodList, global.FoodCategory]);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-      success: false,
-    });
+    res.status(500).json({ message: err.message, success: false });
   }
 });
 
-//POST
+//POST - Order Data
 router.post("/orderData", async (req, res) => {
   const { email, order_data, order_date } = req.body;
 
@@ -129,24 +112,17 @@ router.post("/orderData", async (req, res) => {
       return res.status(404).json({ success: false, message: "No orders found" });
     }
 
-    // If the request includes order_data and order_date, treat it as an order creation request
     if (order_data && order_date) {
       order_data.splice(0, 0, { Order_date: order_date });
-      await Order.findOneAndUpdate(
-        { email },
-        { $push: { order_data: order_data } }
-      );
+      await Order.findOneAndUpdate({ email }, { $push: { order_data: order_data } });
       return res.json({ success: true, message: "Order added" });
     }
 
-    // Otherwise, return existing orders
     return res.json({ success: true, orderData: userOrders });
   } catch (err) {
     console.error("Error processing order:", err.message);
     return res.status(500).json({ message: "Server Error: " + err.message });
   }
 });
-
-  
 
 module.exports = router;

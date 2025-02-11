@@ -11,7 +11,8 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
-  const LOCATIONIQ_API_KEY = "pk.77cf8bdf709fe7b9d57a347d5ee0127b";
+  const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY; // Load API key from .env
+
 
   // Function to fetch address from LocationIQ
   const fetchAddress = async (latitude, longitude) => {
@@ -25,6 +26,7 @@ const Signup = () => {
       console.error("Error fetching address:", error);
     }
   };
+  
 
   // Function to get user's location
   const getLocation = () => {

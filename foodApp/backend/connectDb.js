@@ -1,7 +1,7 @@
+require("dotenv").config(); // Load environment variables
 const mongoose = require("mongoose");
 
-const MONGODB_URI =
-  "mongodb+srv://hardikk1401:Hardik%402999@gofoodcluster.lalqg.mongodb.net/goFoodDB?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const connectDb = async () => {
   try {
