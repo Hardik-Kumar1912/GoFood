@@ -8,13 +8,15 @@ const Login = () => {
     password: "",
   });
 
+  const BACKEND_URI = import.meta.env.VITE_BACKEND_URI;
+
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
   
     try {
-      const response = await fetch("http://localhost:5000/api/loginuser", {
+      const response = await fetch(`${BACKEND_URI}/api/loginuser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

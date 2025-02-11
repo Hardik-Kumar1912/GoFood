@@ -11,8 +11,10 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
-  const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY; // Load API key from .env
-
+  
+  // Load API keys from environment variables
+  const LOCATIONIQ_API_KEY = import.meta.env.VITE_LOCATIONIQ_API_KEY;
+  const BACKEND_URI = import.meta.env.VITE_BACKEND_URI;
 
   // Function to fetch address from LocationIQ
   const fetchAddress = async (latitude, longitude) => {
@@ -26,7 +28,6 @@ const Signup = () => {
       console.error("Error fetching address:", error);
     }
   };
-  
 
   // Function to get user's location
   const getLocation = () => {
@@ -50,7 +51,7 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/createuser", {
+      const response = await fetch(`${BACKEND_URI}/api/createuser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,17 +86,13 @@ const Signup = () => {
         className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg"
         onSubmit={handleSubmit}
       >
-        {/* Form Header */}
         <h2 className="text-2xl font-bold text-center text-green-600 mb-6">
           Create an Account
         </h2>
 
         {/* Name Input */}
         <div className="mb-4">
-          <label
-            htmlFor="exampleInputName"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="exampleInputName" className="block text-sm font-medium text-gray-700">
             Name
           </label>
           <input
@@ -111,10 +108,7 @@ const Signup = () => {
 
         {/* Email Input */}
         <div className="mb-4">
-          <label
-            htmlFor="exampleInputEmail1"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="exampleInputEmail1" className="block text-sm font-medium text-gray-700">
             Email
           </label>
           <input
@@ -134,10 +128,7 @@ const Signup = () => {
 
         {/* Address Input */}
         <div className="mb-4">
-          <label
-            htmlFor="exampleInputLocation"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="exampleInputLocation" className="block text-sm font-medium text-gray-700">
             Address
           </label>
           <div className="flex">
@@ -162,10 +153,7 @@ const Signup = () => {
 
         {/* Password Input */}
         <div className="mb-6">
-          <label
-            htmlFor="exampleInputPassword1"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="exampleInputPassword1" className="block text-sm font-medium text-gray-700">
             Password
           </label>
           <input

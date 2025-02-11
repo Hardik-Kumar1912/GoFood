@@ -7,6 +7,7 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const BACKEND_URI = import.meta.env.VITE_BACKEND_URI;
 
   const slides = [
     {
@@ -57,7 +58,7 @@ const Home = () => {
 
   const loadData = async () => {
     try {
-      let response = await fetch("http://localhost:5000/api/foodData", {
+      let response = await fetch(`${BACKEND_URI}/api/foodData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

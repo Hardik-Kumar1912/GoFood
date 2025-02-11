@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 
 const Myorder = () => {
   const [orderData, setorderData] = useState({});
+  const BACKEND_URI = import.meta.env.VITE_BACKEND_URI;
 
   const fetchMyOrder = async () => {
-    const res = await fetch("http://localhost:5000/api/orderData", {
+    const res = await fetch(`${BACKEND_URI}/api/orderData`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

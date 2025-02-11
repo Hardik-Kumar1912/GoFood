@@ -7,6 +7,7 @@ import { Trash2 } from "lucide-react"; // Import the trash icon
 const Cart = () => {
   let data = useCart();
   let dispatch = useDispatchCart();
+  const BACKEND_URI = import.meta.env.VITE_BACKEND_URI;
 
   if (data.length === 0) {
     return (
@@ -23,7 +24,7 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     const userEmail = localStorage.getItem("userEmail");
-    const response = await fetch("http://localhost:5000/api/orderData", {
+    const response = await fetch(`${BACKEND_URI}/api/orderData`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
