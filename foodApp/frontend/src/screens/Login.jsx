@@ -35,6 +35,7 @@ const Login = () => {
   
       if (json.success) {
         localStorage.setItem("authToken", json.authToken);
+        localStorage.setItem("userEmail",credentials.email);
         navigate("/");
       } else {
         alert("Invalid credentials, please try again.");

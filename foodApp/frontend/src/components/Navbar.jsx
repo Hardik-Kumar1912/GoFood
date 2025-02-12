@@ -33,6 +33,7 @@ const Navbar = () => {
   // Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("authToken"); // Remove token from localStorage
+    localStorage.removeItem("userEmail");
     setAuthToken(null); // Reset authToken state
     setIsLoggedIn(false); // Update state
     navigate("/login"); // Redirect to login page
@@ -71,12 +72,6 @@ const Navbar = () => {
               >
                 MyOrders
               </NavLink>
-              <button
-                onClick={handleLogout}
-                className="font-medium text-sm md:text-base text-white hover:text-green-300"
-              >
-                Logout
-              </button>
               <NavLink
                 to="/"
                 className={({ isActive }) =>
@@ -93,6 +88,12 @@ const Navbar = () => {
                   </span>
                 )}
               </NavLink>
+              <button
+                onClick={handleLogout}
+                className="font-medium text-sm md:text-base text-white hover:text-green-300"
+              >
+                Logout
+              </button>
 
               {/* Modal Component */}
               {cartView && (
