@@ -106,23 +106,38 @@ router.post("/orderData", async (req, res) => {
   }
 
   try {
-    const userOrders = await Order.findOne({ email });
+    let userOrders = await Order.findOne({ email });
 
     if (!userOrders) {
-      return res.status(404).json({ success: false, message: "No orders found" });
+      // If no previous orders exist, create a new order document
+      userOrders = new Order({
+        email,
+        order_data: [{ Order_date: order_date, orders: order_data }],
+      });
+
+      await userOrders.save();
+      return res.json({ success: true, message: "New order created successfully!" });
     }
 
-    if (order_data && order_date) {
-      order_data.splice(0, 0, { Order_date: order_date });
-      await Order.findOneAndUpdate({ email }, { $push: { order_data: order_data } });
-      return res.json({ success: true, message: "Order added" });
+    if (order_data) {
+      // Add new order data to existing user
+      await Order.findOneAndUpdate(
+        { email },
+        { $push: { order_data: { Order_date: order_date, orders: order_data } } }
+      );
+      return res.json({ success: true, message: "Order added successfully!" });
     }
 
-    return res.json({ success: true, orderData: userOrders });
+    // If no order_data is provided, return the existing orders
+    return res.json({ success: true, orderData: userOrders.order_data });
   } catch (err) {
     console.error("Error processing order:", err.message);
-    return res.status(500).json({ message: "Server Error: " + err.message });
+    return res.status(500).json({ success: false, message: "Server Error: " + err.message });
   }
 });
+
+
+
+
 
 module.exports = router;

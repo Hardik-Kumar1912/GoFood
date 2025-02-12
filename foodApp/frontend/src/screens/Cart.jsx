@@ -35,34 +35,39 @@ const Cart = () => {
         order_date: new Date().toDateString(),
       }),
     });
-
-    toast.success("Order Placed Successfully!", {
-      position: "top-center",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      style: {
-        background: "#1E3A8A",
-        color: "#ffffff",
-        fontWeight: "bold",
-        fontSize: "16px",
-        borderRadius: "8px",
-        padding: "16px",
-        textAlign: "center",
-        boxShadow: "0px 4px 12px rgba(30, 58, 138, 0.4)",
-      },
-      progressStyle: {
-        background: "#FACC15",
-      },
-    });
-
-    if (response.status === 200) {
-      dispatch({ type: "DROP" });
+  
+    const resData = await response.json();
+  
+    if (response.ok) {
+      dispatch({ type: "DROP" }); // Clear the cart
+      toast.success("Order Placed Successfully!", {
+        position: "top-center",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        style: {
+          background: "#1E3A8A",
+          color: "#ffffff",
+          fontWeight: "bold",
+          fontSize: "16px",
+          borderRadius: "8px",
+          padding: "16px",
+          textAlign: "center",
+          boxShadow: "0px 4px 12px rgba(30, 58, 138, 0.4)",
+        },
+        progressStyle: {
+          background: "#FACC15",
+        },
+      });
+    } else {
+      toast.error(`Order Failed: ${resData.message}`);
     }
   };
+  
+  
 
   return (
     <div className="container mx-auto my-8 px-4">
